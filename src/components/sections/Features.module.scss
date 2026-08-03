@@ -1,0 +1,42 @@
+.features {
+  background-color: var(--bg-color);
+  padding: 4rem 0;
+  margin-bottom: 8rem; /* Espacio con el footer */
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .features {
+    margin-bottom: 10rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .features {
+    margin-bottom: 12rem;
+  }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
