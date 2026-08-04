@@ -33,6 +33,18 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Bloquear scroll de fondo cuando el menú móvil esté abierto
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   const scrollToServices = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsMenuOpen(false);
@@ -62,6 +74,7 @@ const Header: React.FC = () => {
             <span className={styles.logoText}>Ōkami</span>
           </Link>
         </div>
+
         <nav className={styles.nav}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
@@ -91,6 +104,7 @@ const Header: React.FC = () => {
             </li>
           </ul>
         </nav>
+
         <div className={styles.controls}>
           <button
             className={styles.langButton}
@@ -108,7 +122,7 @@ const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Trigger Button */}
         <button
           className={styles.mobileMenuBtn}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -119,10 +133,24 @@ const Header: React.FC = () => {
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Drawer Overlay */}
       {isMenuOpen && (
         <div className={styles.mobileMenuOverlay} onClick={() => setIsMenuOpen(false)}>
           <div className={styles.mobileMenu} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.mobileMenuHeader}>
+              <div className={styles.mobileMenuBrand}>
+                <Logo />
+                <span className={styles.logoText}>Ōkami</span>
+              </div>
+              <button
+                className={styles.mobileCloseBtn}
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Cerrar menú"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
             <ul className={styles.mobileMenuList}>
               <li>
                 <Link to="/" onClick={() => setIsMenuOpen(false)}>
@@ -142,34 +170,28 @@ const Header: React.FC = () => {
               <li>
                 <button
                   type="button"
-                  style={{ background: 'none', border: 'none', color: 'inherit', font: 'inherit', cursor: 'pointer' }}
                   onClick={() => { onOpen(); setIsMenuOpen(false); }}
                 >
                   {t('nav.contact')}
                 </button>
               </li>
             </ul>
+
             <div className={styles.mobileMenuControls}>
               <button
                 className={styles.langButton}
-                onClick={() => {
-                  setLanguage(language === 'es' ? 'en' : 'es');
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
                 aria-label={`Switch to ${language === 'es' ? 'English' : 'Español'}`}
               >
-                {language === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}
+                {language === 'es' ? '🇪🇸 ES' : '🇬🇧 EN'}
               </button>
               <button
                 className={styles.themeButton}
-                onClick={() => {
-                  toggleTheme();
-                  setIsMenuOpen(false);
-                }}
+                onClick={toggleTheme}
                 aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               >
                 {theme === 'light' ? <FaMoon /> : <FaSun />}
-                {theme === 'light' ? ' Dark Mode' : ' Light Mode'}
+                {theme === 'light' ? ' Oscuro' : ' Claro'}
               </button>
             </div>
           </div>
