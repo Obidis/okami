@@ -1,7 +1,7 @@
 export interface ServiceItem {
   title: string;
   description: string;
-  icon: string;
+  icon?: string;
   image: string;
   alt: string;
 }
@@ -13,8 +13,16 @@ export interface FeatureItem {
   alt: string;
 }
 
-export interface TranslationValue {
-  [key: string]: TranslationValue | string | string[] | number | boolean | object;
+export type TranslationValue =
+  | string
+  | string[]
+  | number
+  | boolean
+  | { [key: string]: TranslationValue }
+  | TranslationValue[];
+
+export interface Translations {
+  [key: string]: TranslationValue;
 }
 
 export type Language = 'es' | 'en';

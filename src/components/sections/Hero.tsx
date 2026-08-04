@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Hero.module.scss';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useModal } from '../../contexts/ModalContext';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 const Hero: React.FC = () => {
   const { t, tArray } = useLanguage();
@@ -24,20 +25,18 @@ const Hero: React.FC = () => {
               ))}
             </div>
             <div 
-            className={styles.heroImage}
-            style={{
-              backgroundImage: 'url(/images/services/hero.webp)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              
-            }}
-          />
+              className={styles.heroImage}
+              style={{
+                backgroundImage: `url(${getAssetUrl('/images/services/hero.webp')})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
             <button type="button" className={styles.ctaButton} onClick={onOpen}>
               {t('hero.cta')}
             </button>
           </div>
-          
         </div>
       </div>
     </section>

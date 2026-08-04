@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Footer.module.scss';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useModal } from '../../contexts/ModalContext';
@@ -7,7 +8,27 @@ import { FaWhatsapp, FaTelegram, FaLinkedin } from 'react-icons/fa';
 const Footer: React.FC = () => {
   const { t } = useLanguage();
   const { onOpen } = useModal();
+  const navigate = useNavigate();
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
+
+  const handleServicesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const element = document.getElementById('servicios');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById('servicios');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  };
 
   return (
     <footer className={styles.footer}>
@@ -20,18 +41,18 @@ const Footer: React.FC = () => {
             <div className={styles.footerColumn}>
               <h3>{t('footer.links.title')}</h3>
               <ul>
-                <li><a href="/">{t('footer.links.home')}</a></li>
-                <li><a href="/about">{t('footer.links.about')}</a></li>
-                <li><a href="/#servicios">{t('footer.links.services')}</a></li>
-                <li><a href="#" onClick={(e) => { e.preventDefault(); onOpen(); }}>{t('footer.links.contact')}</a></li>
+                <li><Link to="/">{t('footer.links.home')}</Link></li>
+                <li><Link to="/about">{t('footer.links.about')}</Link></li>
+                <li><a href="#servicios" onClick={handleServicesClick}>{t('footer.links.services')}</a></li>
+                <li><button type="button" style={{ background: 'none', border: 'none', color: 'inherit', font: 'inherit', cursor: 'pointer', padding: 0 }} onClick={onOpen}>{t('footer.links.contact')}</button></li>
               </ul>
             </div>
             <div className={styles.footerColumn}>
               <h3>{t('footer.legal.title')}</h3>
               <ul>
-                <li><a href="/cookie-policy">{t('footer.legal.cookies')}</a></li>
-                <li><a href="/privacy-policy">{t('footer.legal.privacy')}</a></li>
-                <li><a href="/legal-notice">{t('footer.legal.terms')}</a></li>
+                <li><Link to="/cookie-policy">{t('footer.legal.cookies')}</Link></li>
+                <li><Link to="/privacy-policy">{t('footer.legal.privacy')}</Link></li>
+                <li><Link to="/legal-notice">{t('footer.legal.terms')}</Link></li>
               </ul>
             </div>
             <div className={styles.footerColumn}>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './AboutPage.module.scss';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useModal } from '../contexts/ModalContext';
+import { getAssetUrl } from '../utils/assetHelper';
 
 interface AboutData {
   title: string;
@@ -18,7 +19,7 @@ const AboutPage: React.FC = () => {
   const { tObject, t } = useLanguage();
   const { onOpen } = useModal();
   const about = tObject<AboutData>('about');
-  const workflow = about.workflow;
+  const workflow = about.workflow || { title: '', subtitle: '', steps: [] };
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -33,7 +34,7 @@ const AboutPage: React.FC = () => {
           <div className={styles.imageWrapper}>
             <img
               className={`${styles.image} ${imageLoaded ? styles.loaded : ''}`}
-              src="/images/services/nosotros.webp"
+              src={getAssetUrl('/images/services/nosotros.webp')}
               alt="Equipo Ōkami trabajando en proyecto digital"
               loading="lazy"
               decoding="async"
@@ -45,7 +46,7 @@ const AboutPage: React.FC = () => {
 
           <div className={styles.textContent}>
             <div className={styles.description}>
-              {about.description.map((paragraph: string, index: number) => (
+              {(about.description || []).map((paragraph: string, index: number) => (
                 <p key={index} className={styles.paragraph}>{paragraph}</p>
               ))}
             </div>
@@ -57,7 +58,7 @@ const AboutPage: React.FC = () => {
               <p className={styles.workflowSubtitle}>{workflow.subtitle}</p>
             </header>
             <div className={styles.workflowSteps}>
-              {workflow.steps.map((step, index: number) => (
+              {(workflow.steps || []).map((step, index: number) => (
                 <div key={index} className={styles.workflowStep}>
                   <div className={styles.stepNumber}>{String(index + 1).padStart(2, '0')}</div>
                   <div className={styles.stepContent}>

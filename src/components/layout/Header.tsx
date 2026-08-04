@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Header.module.scss';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useModal } from '../../contexts/ModalContext';
 import { FaBars, FaTimes, FaSun, FaMoon } from 'react-icons/fa';
+import { getAssetUrl } from '../../utils/assetHelper';
 
 const Logo: React.FC = () => (
   <img
-    src="/images/services/okami_logo.png"
+    src={getAssetUrl('/images/services/okami_logo.png')}
     alt="Ōkami Logo"
     className={styles.logoImg}
   />
@@ -19,6 +21,8 @@ const Header: React.FC = () => {
   const { onOpen } = useModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,50 +33,61 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToServices = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const scrollToServices = (e: React.MouseEvent) => {
     e.preventDefault();
-    // If on home page, scroll to section; otherwise navigate to home with hash
-    if (window.location.pathname === '/') {
+    setIsMenuOpen(false);
+
+    if (location.pathname === '/') {
       const element = document.getElementById('servicios');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } else {
-      window.location.href = '/#servicios';
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById('servicios');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
-    setIsMenuOpen(false);
   };
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
       <div className={styles.container}>
         <div className={styles.logoContainer}>
-          <a href="/" className={styles.logoLink}>
+          <Link to="/" className={styles.logoLink}>
             <Logo />
             <span className={styles.logoText}>Ōkami</span>
-          </a>
+          </Link>
         </div>
         <nav className={styles.nav}>
           <ul className={styles.navList}>
             <li className={styles.navItem}>
-              <a href="/" className={styles.navLink}>
+              <Link to="/" className={styles.navLink}>
                 {t('nav.home')}
-              </a>
+              </Link>
             </li>
             <li className={styles.navItem}>
-              <a href="/about" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
+              <Link to="/about" className={styles.navLink} onClick={() => setIsMenuOpen(false)}>
                 {t('nav.about')}
-              </a>
+              </Link>
             </li>
             <li className={styles.navItem}>
-              <a href="/#servicios" className={styles.navLink} onClick={scrollToServices}>
+              <a href="#servicios" className={styles.navLink} onClick={scrollToServices}>
                 {t('nav.services')}
               </a>
             </li>
             <li className={styles.navItem}>
-              <a href="#" className={styles.navLink} onClick={(e) => { e.preventDefault(); onOpen(); setIsMenuOpen(false); }}>
+              <button
+                type="button"
+                className={styles.navLink}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', font: 'inherit' }}
+                onClick={() => { onOpen(); setIsMenuOpen(false); }}
+              >
                 {t('nav.contact')}
-              </a>
+              </button>
             </li>
           </ul>
         </nav>
@@ -93,7 +108,7 @@ const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu Button - inside container for proper alignment */}
+        {/* Mobile Menu Button */}
         <button
           className={styles.mobileMenuBtn}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -107,27 +122,31 @@ const Header: React.FC = () => {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className={styles.mobileMenuOverlay} onClick={() => setIsMenuOpen(false)}>
-          <div className={styles.mobileMenu}>
+          <div className={styles.mobileMenu} onClick={(e) => e.stopPropagation()}>
             <ul className={styles.mobileMenuList}>
               <li>
-                <a href="/" onClick={() => setIsMenuOpen(false)}>
+                <Link to="/" onClick={() => setIsMenuOpen(false)}>
                   {t('nav.home')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/about" onClick={() => setIsMenuOpen(false)}>
+                <Link to="/about" onClick={() => setIsMenuOpen(false)}>
                   {t('nav.about')}
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#servicios" onClick={scrollToServices}>
+                <a href="#servicios" onClick={scrollToServices}>
                   {t('nav.services')}
                 </a>
               </li>
               <li>
-                <a href="#" onClick={(e) => { e.preventDefault(); onOpen(); setIsMenuOpen(false); }}>
+                <button
+                  type="button"
+                  style={{ background: 'none', border: 'none', color: 'inherit', font: 'inherit', cursor: 'pointer' }}
+                  onClick={() => { onOpen(); setIsMenuOpen(false); }}
+                >
                   {t('nav.contact')}
-                </a>
+                </button>
               </li>
             </ul>
             <div className={styles.mobileMenuControls}>
